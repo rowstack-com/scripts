@@ -1,14 +1,12 @@
 # Set-TaskbarDefaults
 
-Sets the initial taskbar for new users on Windows 11: **File Explorer, Microsoft Edge, Outlook and Microsoft Teams**, in that order. Everything else the OEM or Windows pins (Store, Copilot, Microsoft 365) is removed. Users can then pin, unpin and reorder freely, and their changes are kept.
-
-The script runs once per device, before the first sign-in. It configures the taskbar only, not the Start menu.
+Sets the initial taskbar for new users on Windows 11. By default the script configures the following apps in order: **File Explorer, Microsoft Edge, Outlook and Microsoft Teams**. Everything else the OEM or Windows pins (Store, Copilot, Microsoft 365) is removed. Users can then pin, unpin and reorder freely, and their changes are kept.
 
 ## Prerequisites
 
 - Windows 11 24H2 with KB5060829 (build 26100.4484) or later
-- Administrator rights (SYSTEM when deployed with Intune)
-- The pinned apps installed or provisioned before the user's first sign-in. A pin for a missing app is skipped silently
+- Administrator rights (SYSTEM when deployed with Intune or other MDM)
+- The pinned apps installed or provisioned before the user's first sign-in. A pin for a missing app is skipped silently.
 
 ## How it works
 
@@ -37,13 +35,13 @@ Add a **Store app** by its AUMID (find it with `Get-StartApps`):
 <taskbar:UWA AppUserModelID="Microsoft.WindowsCalculator_8wekyb3d8bbwe!App" PinGeneration="1"/>
 ```
 
-Keep `PinGeneration="1"` on every line. "Outlook" is the new Outlook for Windows, not classic OUTLOOK.EXE. The script does not validate the XML, so check it after editing.
+Keep `PinGeneration="1"` on every line. The script does not validate the XML, so check it after editing.
 
-## Deploy with Intune
+## Recommended Deployment: Deploy for Intune Autopilot
 
 Deploy it as a **Win32 app** that blocks the Enrollment Status Page (ESP), so the desktop waits until the layout file is in place. A platform script is not tracked by the ESP, so its timing is not guaranteed.
 
-1. **Package.** Put the script in an empty folder and run the [Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool): `.\IntuneWinAppUtil.exe -c C:\Pack\Source -s Set-TaskbarDefaults.ps1 -o C:\Pack\Out`
+1. **Package.** Put the script in an empty folder and run the [Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool).
 2. **Add.** **Apps** > **Windows** > **Add** > **Windows app (Win32)** > select the `.intunewin` file.
 3. **Program.**
 
@@ -81,7 +79,7 @@ Remove-Item "C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModifi
 
 ## Keeping it working
 
-Windows applies the Default-profile file today, but Microsoft does not document it as a Windows 11 deployment method. Re-test with a new user after each Windows feature update. The supported alternative is an Intune Settings catalog "Start Layout" policy, which takes the same XML but re-applies on a schedule and can overwrite user changes. Do not run both.
+Re-test with a new user after each Windows feature update. The supported alternative is an Intune Settings catalog "Start Layout" policy, which takes the same XML but re-applies on a schedule and can overwrite user changes. Do not run both.
 
 ## License
 
