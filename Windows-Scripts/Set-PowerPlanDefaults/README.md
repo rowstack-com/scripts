@@ -1,10 +1,10 @@
 # Set-PowerPlanDefaults
 
-Sets initial, user-changeable power settings on Windows 10 and 11 for laptop or desktop systems. The values are written once and not enforced, so users can change sleep, display and button behavior afterwards. This is the difference from an Intune configuration policy, which keeps reapplying and locks the setting.
+Sets initial, user-changeable power settings on Windows 11 for laptop or desktop systems. The values are written once and not enforced, so users can change sleep, display and button behavior afterwards. This is the difference from an Intune configuration policy, which keeps reapplying and locks the setting.
 
 ## Prerequisites
 
-- Windows 10 or 11
+- Windows 11 and later
 - Administrator rights (SYSTEM when deployed with Intune or other MDM)
 
 ## How it works
